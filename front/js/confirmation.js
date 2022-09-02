@@ -1,12 +1,11 @@
-orderNb = new URLSearchParams(window.location.search).get("orderId");
-
-function validOrder() {
-  document.getElementById("orderId").innerHTML = orderNb;
+function insertOrderIdInTemplate(getOrderId) {
+  document.getElementById("orderId").innerHTML = getOrderId;
 }
 
-function deleteLocalStorage() {
-  localStorage.clear();
+function main() {
+  const getOrderId = new URLSearchParams(window.location.search).get("orderId");
+  insertOrderIdInTemplate(getOrderId);
+  localStorage.removeItem("Cart");
 }
 
-validOrder();
-deleteLocalStorage();
+main();
