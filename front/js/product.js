@@ -76,7 +76,7 @@ function handleAddToCart() {
 }
 
 function getCartStorage() {
-  cartStorage = JSON.parse(localStorage.getItem("Cart"));
+  const cartStorage = JSON.parse(localStorage.getItem("Cart"));
   if (!cartStorage) {
     return [];
   }
