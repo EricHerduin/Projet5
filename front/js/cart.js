@@ -51,7 +51,6 @@ function displayCart(cartStorage, products) {
 }
 
 function sumQuantity(cartStorage) {
-  //fonction OK
   let sum = 0;
   for (let index = 0; index < cartStorage.length; index++) {
     sum += parseInt(cartStorage[index].quantity);
@@ -59,7 +58,6 @@ function sumQuantity(cartStorage) {
   return sum;
 }
 function totalAmount(cartStorage, products) {
-  //fonction OK
   let total = 0;
   for (let index = 0; index < cartStorage.length; index++) {
     const idPositionProduct = getIdData(products, cartStorage[index]._id);
@@ -119,7 +117,7 @@ function deleteItem(deleteBtn, cartStorage) {
   }
 }
 
-// ***********  --> envoi de la commande et des coordonées  **************
+// ***********  --> envoi de la commande et des coordonnées  **************
 
 // --> validation du Format du champ Email
 function ValidateEmail() {

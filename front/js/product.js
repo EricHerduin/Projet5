@@ -46,7 +46,6 @@ function displayColorsOption(colors) {
     optionSelect.appendChild(optionData);
   }
 }
-// liste des couleurs en français
 
 function displayProductInformation(product) {
   imgUrl = product.imageUrl;
