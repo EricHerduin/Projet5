@@ -95,15 +95,21 @@ function updateCartStorage(cartStorage, form) {
   });
   if (cartProducts.length > 0) {
     const cartProduct = cartProducts[0];
-    const product = {
-      ...cartProduct,
-      quantity: cartProduct.quantity + form.quantity,
-    };
-    const index = cartStorage.indexOf(cartProduct);
-    cartStorage[index] = product;
+    if (cartProduct.quantity + form.quantity <= 100) {
+      const product = {
+        ...cartProduct,
+        quantity: cartProduct.quantity + form.quantity,
+      };
+      const index = cartStorage.indexOf(cartProduct);
+      cartStorage[index] = product;
+    } else {
+      alert("vous dépassez la quantité maximum de 100");
+      return;
+    }
   } else {
     const product = { ...form, _id: getProductId() };
     cartStorage.push(product);
   }
+  alert("article ajouté au panier");
   localStorage.setItem("Cart", JSON.stringify(cartStorage));
 }

@@ -1,6 +1,12 @@
 async function main() {
   const response = await fetch("http://localhost:3000/api/products");
   const products = await response.json();
+  const ctrlcartStorage = JSON.parse(localStorage.getItem("Cart"));
+  if (ctrlcartStorage == null) {
+    console.log("panier vide");
+    document.querySelector("#order").addEventListener("click", ctrlCartStorage);
+    return;
+  }
   const cartStorage = JSON.parse(localStorage.getItem("Cart"));
   displayHtml(cartStorage, products);
   const deleteBtn = document.querySelectorAll(".deleteItem");
@@ -86,8 +92,8 @@ function displayHtml(cartStorage, products) {
 function modifyQuantity(cartStorage, inputQuantity) {
   for (let index = 0; index < cartStorage.length; index++) {
     inputQuantity[index].addEventListener("change", (event) => {
-      if (event.target.value <= 0) {
-        alert("le nombre ne peut être inférieur à 1");
+      if (event.target.value <= 0 || event.target.value > 100) {
+        alert("le nombre ne peut être inférieur à 1 ou supérieur à 100");
         return;
       } else {
         const newQuantity = event.target.value;
@@ -108,6 +114,12 @@ function updateCart(cartStorage) {
   main();
 }
 function deleteItem(deleteBtn, cartStorage) {
+  if (deleteBtn.length < 1) {
+    localStorage.removeItem("Cart");
+    alert("votre panier est vide");
+    main();
+  }
+
   for (let index = 0; index < deleteBtn.length; index++) {
     deleteBtn[index].addEventListener("click", (event) => {
       event.preventDefault();
@@ -122,18 +134,11 @@ function deleteItem(deleteBtn, cartStorage) {
 // --> validation du Format du champ Email
 function ValidateEmail() {
   const form = getForm();
-  email = form.email;
-  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-    return true;
-  } else {
-    if (!email.value) {
-      return false;
-    }
-  }
-  alert("merci de saisir une adresse mail valide !");
-  return false;
+  const email = form.email.match(/^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/);
+  return email;
 }
-
+// /^([A-Za-z0-9_-.])+@ ([A-Za-z0-9_-.])+.([A-Za-z]{2,4})$/
+//
 function getForm() {
   const firstName = document.querySelector("#firstName").value;
   const lastName = document.querySelector("#lastName").value;
@@ -176,9 +181,40 @@ async function returnOrderId(contactCustumer, orderProduct) {
   return responseOrder;
 }
 
+function ctrlCartStorage() {
+  const cartStorage = JSON.parse(localStorage.getItem("Cart"));
+  if (cartStorage == null) {
+    return alert("votre panier est vide");
+  }
+}
+
+function ctrlCustumerInfo() {
+  const form = getForm();
+  const ctrlLastName = /(\d+)/.test(form.lastName);
+  const ctrlFirstName = /(\d+)/.test(form.firstName);
+  if (ctrlFirstName == true || ctrlLastName == true) {
+    return false;
+  }
+}
+
+function ctrlCustumerCity() {
+  const form = getForm();
+  const ctrlZipCode = /^(\d+)$/.test(form.city.substr(0, 5));
+  return ctrlZipCode;
+}
+
 async function sendOrder(cartStorage) {
-  ValidateEmail();
+  if (ctrlCustumerInfo() == false) {
+    alert("veuillez vérifier votre nom et/ou prénom");
+    return;
+  }
+  if (ctrlCustumerCity() == false) {
+    alert("vérifiez le Code postal et la ville");
+    return;
+  }
+
   if (ValidateEmail() == false) {
+    alert("vérifiez l'adresse mail");
     return;
   }
   const contactCustumer = custumerInfo();
